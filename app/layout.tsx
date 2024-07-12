@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
+import { SessionProvider } from "next-auth/react";
+import { NextAuthProviser } from "./lib/next-auth/provider";
+import { Suspense } from "react";
+import Loading from "./loading";
 
-const noteSansJp = Noto_Sans_JP({ subsets: ["latin"], weight: ["400"] });
+const notoSansJP = Noto_Sans_JP({ subsets: ["latin"], weight: ["400"] });
 
 export const metadata: Metadata = {
   title: "Book commerce",
@@ -17,9 +21,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={noteSansJp.className}>
-        <Header />
-        {children}
+      <body className={notoSansJP.className}>
+        <NextAuthProviser>
+          <Header />
+          <Suspense fallback={<Loading />}>{children}</Suspense>
+        </NextAuthProviser>
       </body>
     </html>
   );
